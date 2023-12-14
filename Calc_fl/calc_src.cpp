@@ -145,8 +145,8 @@ int main()
     output->value("0");
     
     
-    output->maximum_size(12);
-    output->align(FL_ALIGN_LEFT);
+    /*output->maximum_size(12);
+    output->align(FL_ALIGN_LEFT);*/
     std::vector<std::string> btn_lables
     {
         "%","C","CE","<=","7","8","9","*","4","5","6","-","1","2","3","+","/","0",".","="
