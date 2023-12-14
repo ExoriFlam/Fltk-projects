@@ -1,0 +1,17 @@
+.vscode/
+.vs/
+*.suo
+*.user
+*.sln.docstates
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.vcxproj.*user
+*.sln
+Debug/
+Release/
+x64/
+*.o
+*.obj
+*.a
+*.lib
