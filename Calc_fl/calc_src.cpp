@@ -2,7 +2,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Group.H>
-#include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Window.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Output.H>
 #include <string>
@@ -13,13 +13,7 @@
 
 
 
-void updOutput(Fl_Output* out, std::string val)
-{
-    if (out)
-    {
-        out->value(val.c_str());
-    }
-}
+
 
 double calculate(std::string left, std::string right, char operation)
 {
@@ -78,6 +72,7 @@ std::string format_result(double res)
 void ButtonCb(Fl_Widget* widget, void* data)
 {
     Fl_Output* out = (Fl_Output*)data;
+   
     std::string val = out->value();
 
     std::string btn_name = widget->label();
@@ -122,8 +117,11 @@ void ButtonCb(Fl_Widget* widget, void* data)
         oper = btn_name[0];
     }
 
-    updOutput(out, val.substr(0, 15));
+    
    
+    out->value(val.substr(0, 15).c_str());
+    
+
 }
 
 
@@ -132,37 +130,37 @@ void ButtonCb(Fl_Widget* widget, void* data)
 
 int main()
 {
+   
+    std::unique_ptr<Fl_Window> window = std::make_unique<Fl_Window>(400, 600, "Calculator");
 
-    Fl_Window* window = new Fl_Window(400, 600, "Calculator");
+    
   
     window->begin();
-
-    Fl_Output* output = new Fl_Output(2,2,395,95);
-    Fl_Box* output_box = new Fl_Box(0, 0, 400, 100);
+ 
+    std::shared_ptr<Fl_Output> output = std::make_shared<Fl_Output>(2, 2, 395, 95);
+  
+    std::unique_ptr<Fl_Box> output_box = std::make_unique<Fl_Box>(0, 0, 400, 100);
     output->color(FL_GRAY);
     output->textsize(45);
     
     output->value("0");
     
     
-    /*output->maximum_size(12);
-    output->align(FL_ALIGN_LEFT);*/
+    
     std::vector<std::string> btn_lables
     {
         "%","C","CE","<=","7","8","9","*","4","5","6","-","1","2","3","+","/","0",".","="
     };
 
-    std::vector<std::vector<Fl_Box*>> boxes;
-    std::vector<std::vector<Fl_Button*>> buttons;
-    boxes.resize(5, std::vector<Fl_Box*>(4));
-    buttons.resize(5, std::vector<Fl_Button*>(4));
+    std::vector<std::vector<std::shared_ptr<Fl_Box>>> boxes(5, std::vector<std::shared_ptr<Fl_Box>>(4));
+    std::vector<std::vector<std::shared_ptr<Fl_Button>>> buttons(5, std::vector<std::shared_ptr<Fl_Button>>(4));
+   
     
     for (int i = 0; i < 5; ++i) {
         for (int j = 0; j < 4; ++j) {
-            boxes[i][j] = new Fl_Box(100 * j, 100 * i + 100, 100, 100, "");
+            boxes[i][j] = std::make_unique<Fl_Box>(100 * j, 100 * i + 100, 100, 100, "");
             boxes[i][j]->box(FL_DOWN_FRAME);
-            
-            
+               
         }
     }
 
@@ -171,10 +169,10 @@ int main()
     for (int i = 0; i < 5; ++i) {
         for (int j = 0; j < 4; ++j) {
            
-            buttons[i][j] = new Fl_Button(100 * j + 2, 100 * i + 102, 95, 95, "");
+            buttons[i][j] = std::make_shared<Fl_Button>(100 * j + 2, 100 * i + 102, 95, 95, "");
             buttons[i][j]->labelsize(50);
             buttons[i][j]->copy_label(btn_lables[name++].c_str());
-            buttons[i][j]->callback(ButtonCb, output);
+            buttons[i][j]->callback(ButtonCb, output.get());
            
         }
     }
